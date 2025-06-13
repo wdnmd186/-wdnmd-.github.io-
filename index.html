@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Explorer | 全球探索者</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--light);
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* 顶部导航栏样式 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        /* 导航栏样式 */
+        .nav-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-icons {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin: 0 8px;
+            position: relative;
+        }
+        
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link:hover {
+            background: rgba(67, 97, 238, 0.7);
+            transform: translateY(-5px);
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+        
+        .nav-link:hover::before {
+            transform: translateY(0);
+        }
+        
+        .nav-text {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        /* 语言切换样式 */
+        .language-switcher {
+            margin-left: 20px;
+        }
+        
+        .lang-btn {
+            background: rgba(67, 97, 238, 0.6);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(67, 97, 238, 0.9);
+            transform: scale(1.05);
+        }
+        
+        .lang-btn i {
+            margin-right: 8px;
+        }
+        
+        /* 主内容区样式 */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .hero {
+            margin-bottom: 60px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 功能卡片区域 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .nav-container {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            
+            .nav-icons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-item {
+                margin: 5px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .nav-link {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .nav-text {
+                font-size: 0.6rem;
+            }
+            
+            .lang-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <a href="https://www.globalexplorer.com" class="logo" target="_blank">
+            <i class="fas fa-globe-americas logo-icon"></i>
+            <span class="logo-text">GlobalExplorer.com</span>
+        </a>
+        
+        <div class="nav-container">
+            <!-- 导航图标 -->
+            <ul class="nav-icons">
+                <!-- 每个导航项包含图标和文字 -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-text" data-en="Home" data-zh="首页">首页</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-compass"></i>
+                        <span class="nav-text" data-en="Explore" data-zh="探索">探索</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span class="nav-text" data-en="Maps" data-zh="地图">地图</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-plane"></i>
+                        <span class="nav-text" data-en="Travel" data-zh="旅行">旅行</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-camera"></i>
+                        <span class="nav-text" data-en="Gallery" data-zh="图库">图库</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span class="nav-text" data-en="Guide" data-zh="指南">指南</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-hotel"></i>
+                        <span class="nav-text" data-en="Hotels" data-zh="酒店">酒店</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-utensils"></i>
+                        <span class="nav-text" data-en="Food" data-zh="美食">美食</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="nav-text" data-en="Shop" data-zh="购物">购物</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="nav-text" data-en="Account" data-zh="账户">账户</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- 语言切换按钮 -->
+            <div class="language-switcher">
+                <button id="langToggle" class="lang-btn">
+                    <i class="fas fa-language"></i>
+                    <span id="langText">English</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <section class="hero">
+            <h1 id="heroTitle">探索世界的奇迹</h1>
+            <p id="heroText">发现令人惊叹的目的地，体验独特的文化，创造难忘的回忆。无论您是冒险家、文化爱好者还是休闲旅行者，我们都能满足您的需求。</p>
+            <a href="#" class="cta-btn" id="ctaBtn">开始探索</a>
+        </section>
+        
+        <section class="features">
+            <div class="feature-card">
+                <i class="fas fa-map-marked-alt feature-icon"></i>
+                <h3 id="featureTitle1">交互式地图</h3>
+                <p id="featureText1">使用我们先进的交互式地图探索全球目的地，查找景点、路线和隐藏的宝藏。</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-ticket-alt feature-icon"></i>
+                <h3 id="featureTitle2">门票预订</h3>
+                <p id="featureText2">预订景点门票、旅游活动和体验，享受独家折扣和免排队特权。</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-users feature-icon"></i>
+                <h3 id="featureTitle3">社区指南</h3>
+                <p id="featureText3">从我们的全球旅行者社区获取内行贴士和建议，探索鲜为人知的景点。</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p id="footerText">© 2023 GlobalExplorer.com - 全球旅行探索平台 | 使用条款 | 隐私政策</p>
+    </footer>
+
+    <script>
+        // 语言切换功能
+        const langToggle = document.getElementById('langToggle');
+        const langText = document.getElementById('langText');
+        let currentLang = 'zh';
+        
+        // 语言文本映射
+        const translations = {
+            zh: {
+                langText: 'English',
+                heroTitle: '探索世界的奇迹',
+                heroText: '发现令人惊叹的目的地，体验独特的文化，创造难忘的回忆。无论您是冒险家、文化爱好者还是休闲旅行者，我们都能满足您的需求。',
+                ctaBtn: '开始探索',
+                featureTitle1: '交互式地图',
+                featureText1: '使用我们先进的交互式地图探索全球目的地，查找景点、路线和隐藏的宝藏。',
+                featureTitle2: '门票预订',
+                featureText2: '预订景点门票、旅游活动和体验，享受独家折扣和免排队特权。',
+                featureTitle3: '社区指南',
+                featureText3: '从我们的全球旅行者社区获取内行贴士和建议，探索鲜为人知的景点。',
+                footerText: '© 2023 GlobalExplorer.com - 全球旅行探索平台 | 使用条款 | 隐私政策',
+                navItems: {
+                    home: '首页',
+                    explore: '探索',
+                    maps: '地图',
+                    travel: '旅行',
+                    gallery: '图库',
+                    guide: '指南',
+                    hotels: '酒店',
+                    food: '美食',
+                    shop: '购物',
+                    account: '账户'
+                }
+            },
+            en: {
+                langText: '中文',
+                heroTitle: 'Discover World Wonders',
+                heroText: 'Explore breathtaking destinations, experience unique cultures, and create unforgettable memories. Whether you\'re an adventurer, culture enthusiast, or leisure traveler, we have something for you.',
+                ctaBtn: 'Start Exploring',
+                featureTitle1: 'Interactive Maps',
+                featureText1: 'Explore global destinations with our advanced interactive maps, find attractions, routes, and hidden gems.',
+                featureTitle2: 'Ticket Booking',
+                featureText2: 'Book attraction tickets, tours, and experiences with exclusive discounts and skip-the-line privileges.',
+                featureTitle3: 'Community Guides',
+                featureText3: 'Get insider tips and recommendations from our global community of travelers to discover off-the-beaten-path attractions.',
+                footerText: '© 2023 GlobalExplorer.com - Global Travel Exploration Platform | Terms of Use | Privacy Policy',
+                navItems: {
+                    home: 'Home',
+                    explore: 'Explore',
+                    maps: 'Maps',
+                    travel: 'Travel',
+                    gallery: 'Gallery',
+                    guide: 'Guide',
+                    hotels: 'Hotels',
+                    food: 'Food',
+                    shop: 'Shop',
+                    account: 'Account'
+                }
+            }
+        };
+        
+        // 切换语言
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            updateLanguage();
+        });
+        
+        // 更新页面语言
+        function updateLanguage() {
+            const langData = translations[currentLang];
+            
+            // 更新所有文本元素
+            langText.textContent = langData.langText;
+            document.getElementById('heroTitle').textContent = langData.heroTitle;
+            document.getElementById('heroText').textContent = langData.heroText;
+            document.getElementById('ctaBtn').textContent = langData.ctaBtn;
+            document.getElementById('featureTitle1').textContent = langData.featureTitle1;
+            document.getElementById('featureText1').textContent = langData.featureText1;
+            document.getElementById('featureTitle2').textContent = langData.featureTitle2;
+            document.getElementById('featureText2').textContent = langData.featureText2;
+            document.getElementById('featureTitle3').textContent = langData.featureTitle3;
+            document.getElementById('featureText3').textContent = langData.featureText3;
+            document.getElementById('footerText').textContent = langData.footerText;
+            
+            // 更新导航项文本
+            const navItems = document.querySelectorAll('.nav-text');
+            navItems.forEach(item => {
+                const key = item.textContent.toLowerCase();
+                if (langData.navItems[key]) {
+                    item.textContent = langData.navItems[key];
+                }
+            });
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            // 添加导航图标悬停效果
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    link.style.transform = 'translateY(-8px)';
+                    link.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
+                });
+                
+                link.addEventListener('mouseleave', () => {
+                    link.style.transform = 'translateY(0)';
+                    link.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
